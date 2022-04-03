@@ -101,7 +101,7 @@ function GameBoard(players){
     let gridSpotFilled = function() {
         this.removeEventListener("click",gridSpotFilled);
         this.textContent = playerSymbol();
-        if(playerTurn >= 5) {
+        if(playerTurn >= 5 && playerTurn < 9) {
             if(checkBoardWinCondition()){
                 playerTurnBoard.textContent = `${players[(playerTurn-1) % 2].getName()} WON!`;
                 ticTacToeGridArray.forEach( (args) => {
