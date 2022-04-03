@@ -113,7 +113,16 @@ function GameBoard(players){
                 return;
             }
         }
-        else if(playerTurn === 9)
+        else if(playerTurn === 9){
+            playerTurnBoard.textContent = "DRAW";
+            ticTacToeGridArray.forEach( (args) => {
+                args.forEach(Element => {
+                    Element.removeEventListener("click",gridSpotFilled);
+                    Element.classList.remove("gridBoxClickable");
+                });
+            });
+            return;
+        }
         playerTurnBoard.textContent = `${players[playerTurn % 2].getName()}'s turn`;
         this.classList.remove("gridBoxClickable");
     }
