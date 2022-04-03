@@ -94,7 +94,7 @@ button {
     text-align: center;
 }
 .TicTacToeGrid {
-    display: grid;
+    display: none;
     grid-template-columns: repeat(3,1fr);
     grid-template-rows: repeat(3,1fr);
     border-style: solid;
@@ -104,9 +104,13 @@ button {
 }
 .gridBox {
     font-family: 'Lobster', cursive;
-    content: " ";
+    content: "&nbsp;";
     width: 5rem;
     height: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
     background-color: #acacac;
     border-style: solid;
     border-color: chocolate;
