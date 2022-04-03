@@ -101,7 +101,17 @@ function GameBoard(players){
     let gridSpotFilled = function() {
         this.removeEventListener("click",gridSpotFilled);
         this.textContent = playerSymbol();
-        if(playerTurn >= 5 && playerTurn < 9) {
+        if(playerTurn === 9){
+            playerTurnBoard.textContent = "DRAW";
+            ticTacToeGridArray.forEach( (args) => {
+                args.forEach(Element => {
+                    Element.removeEventListener("click",gridSpotFilled);
+                    Element.classList.remove("gridBoxClickable");
+                });
+            });
+            return;
+        }
+        if(playerTurn >= 5) {
             if(checkBoardWinCondition()){
                 playerTurnBoard.textContent = `${players[(playerTurn-1) % 2].getName()} WON!`;
                 ticTacToeGridArray.forEach( (args) => {
@@ -112,16 +122,6 @@ function GameBoard(players){
                 });
                 return;
             }
-        }
-        else if(playerTurn === 9){
-            playerTurnBoard.textContent = "DRAW";
-            ticTacToeGridArray.forEach( (args) => {
-                args.forEach(Element => {
-                    Element.removeEventListener("click",gridSpotFilled);
-                    Element.classList.remove("gridBoxClickable");
-                });
-            });
-            return;
         }
         playerTurnBoard.textContent = `${players[playerTurn % 2].getName()}'s turn`;
         this.classList.remove("gridBoxClickable");
