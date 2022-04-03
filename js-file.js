@@ -16,7 +16,6 @@ function startGame() {
 buttonOptions = ( () => {
     let buttons = document.querySelectorAll("button");
     let ticTacToeGrid = document.querySelector(".TicTacToeGrid");
-    ticTacToeGrid.style.display = "grid";
     let playerTurnBoard = document.querySelector(".Player");
     for(let i =0; i < 4; i++){
         switch(buttons[i].textContent){
@@ -114,6 +113,7 @@ function GameBoard(players){
                 return;
             }
         }
+        else if(playerTurn === 9)
         playerTurnBoard.textContent = `${players[playerTurn % 2].getName()}'s turn`;
         this.classList.remove("gridBoxClickable");
     }
