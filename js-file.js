@@ -1,26 +1,32 @@
-
-
 function startGame() {
-    let playerTurn = 0;
-    let player1 = playerFactory(playerTurn);
-    let player2 = playerFactory(playerTurn + 1);
-    let players = [player1,player2];
-    let gameboard = GameBoard(players);
-
-    buttonOptions.disableButton(this);
-    buttonOptions.enableButton(document.querySelector("#reset"));
-    gameboard.buildGameBoard();
-
+    if(document.getElementById('2player').classList[0] == "buttonClicked"){
+        let playerTurn = 0;
+        let player1 = playerFactory(playerTurn);
+        let player2 = playerFactory(playerTurn + 1);
+        let players = [player1,player2];
+        let gameboard = GameBoard(players);
+    
+        buttonOptions.disableButton(this);
+        buttonOptions.enableButton(document.querySelector("#reset"));
+        gameboard.buildGameBoard();
+    }
+    else {
+        console.log("sa");
+    }
 }
-
-buttonOptions = ( () => {
+const buttonOptions = ( () => {
     let buttons = document.querySelectorAll("button");
     let ticTacToeGrid = document.querySelector(".TicTacToeGrid");
     let playerTurnBoard = document.querySelector(".Player");
     for(let i =0; i < 4; i++){
         switch(buttons[i].textContent){
+            case "1 PLAYER (testing)": 
+                buttons[i].classList.add('buttonClickable');
+                buttons[i].addEventListener('click',computer);
+                break;
             case "2 PLAYERS":
                 buttons[i].classList.add("buttonClicked");
+                buttons[i].addEventListener('click',player2);
                 break;
             case "RESET":
                 buttons[i].addEventListener("click",clear);
@@ -53,11 +59,17 @@ buttonOptions = ( () => {
         button.classList.add("buttonClickable");
         button.classList.remove("buttonClicked");
         switch(button.id){
+            case "bot":
+                button.addEventListener("click",computer);
+                break;
             case "start":
                 button.addEventListener("click",startGame);
                 break;
             case "reset":
                 button.addEventListener("click",clear);
+                break;
+            case "2player":
+                button.addEventListener("click",player2);
                 break;
             default:
                 console.log("no event listener handled");
@@ -68,9 +80,7 @@ buttonOptions = ( () => {
         enableButton
     };
 
-} )();
-
-
+})();
 
 function GameBoard(players){
     let playerTurn = 0;
@@ -103,8 +113,8 @@ function GameBoard(players){
         this.textContent = playerSymbol();
         if(playerTurn === 9){
             playerTurnBoard.textContent = "DRAW";
-            ticTacToeGridArray.forEach( (args) => {
-                args.forEach(Element => {
+            ticTacToeGridArray.forEach( (arr) => {
+                arr.forEach(Element => {
                     Element.removeEventListener("click",gridSpotFilled);
                     Element.classList.remove("gridBoxClickable");
                 });
@@ -114,8 +124,8 @@ function GameBoard(players){
         if(playerTurn >= 5) {
             if(checkBoardWinCondition()){
                 playerTurnBoard.textContent = `${players[(playerTurn-1) % 2].getName()} WON!`;
-                ticTacToeGridArray.forEach( (args) => {
-                    args.forEach(Element => {
+                ticTacToeGridArray.forEach( (arr) => {
+                    arr.forEach(Element => {
                         Element.removeEventListener("click",gridSpotFilled);
                         Element.classList.remove("gridBoxClickable");
                     });
@@ -145,7 +155,34 @@ function GameBoard(players){
 
     return {buildGameBoard};
 };
+// function GameBoard() {
+//     const buildGameBoard = function() {
+//         for(i = 0; i < 9; i++){
+//             let gridBox = document.createElement("div");
+//             gridBox.addEventListener("click", gridSpotFilled);
+//             gridBox.classList.add("gridBox");
+//             gridBox.classList.add("gridBoxClickable");
+//             gridBox.setAttribute("data-row", Math.floor(i/3));
+//             ticTacToeGrid.append(gridBox);
+//         }
+//           ticTacToeGridArray = [
+//                Array.from(document.querySelectorAll(".gridBox[data-row='0']")),
+//                 Array.from(document.querySelectorAll(".gridBox[data-row='1']")),
+//                 Array.from(document.querySelectorAll(".gridBox[data-row='2']"))
+//          ]
+//     }
 
+// }
+function computer(e) {
+    buttonOptions.disableButton(this);
+    buttonOptions.enableButton(document.getElementById('2player'));
+
+}
+function player2(e) {
+    buttonOptions.disableButton(this);
+    buttonOptions.enableButton(document.getElementById("bot"));
+
+}   
 function playerFactory(playerTurn) {
     let name = null;
     while(name == null){
@@ -155,5 +192,4 @@ function playerFactory(playerTurn) {
         return `${name}`;
     }
     return {getName};
-
 }
