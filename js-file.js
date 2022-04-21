@@ -1,17 +1,26 @@
 function startGame() {
+    buttonOptions.disableButton(this);
+    buttonOptions.enableButton(document.querySelector("#reset"));
     if(document.getElementById('2player').classList[0] == "buttonClicked"){
         let playerTurn = 0;
         let player1 = playerFactory(playerTurn);
         let player2 = playerFactory(playerTurn + 1);
         let players = [player1,player2];
         let gameboard = GameBoard(players);
-    
-        buttonOptions.disableButton(this);
-        buttonOptions.enableButton(document.querySelector("#reset"));
+
         gameboard.buildGameBoard();
     }
     else {
-        console.log("sa");
+        let playerTurn = Math.floor(Math.random() * 2);
+        if(playerTurn == 0){
+            let botTurn = 1;
+        }
+        else {
+            let botTurn = 0;
+        }
+        computerGame = computerGameBoard(playerTurn);
+        computerGame.buildGameBoard();
+
     }
 }
 const buttonOptions = ( () => {
@@ -82,7 +91,8 @@ const buttonOptions = ( () => {
 
 })();
 
-function GameBoard(players){
+function GameBoard(players)
+{
     let playerTurn = 0;
     let ticTacToeGrid = document.querySelector(".TicTacToeGrid");
     let ticTacToeGridArray;
@@ -151,28 +161,68 @@ function GameBoard(players){
                 Array.from(document.querySelectorAll(".gridBox[data-row='1']")),
                 Array.from(document.querySelectorAll(".gridBox[data-row='2']"))
          ]
+        }
+    return {buildGameBoard};
+};
+function computerGameBoard(playerTurn) 
+{
+    let ticTacToeGrid = document.querySelector(".TicTacToeGrid");
+    let ticTacToeGridArray;
+    let isPlayerTurn;
+    if(playerTurn == 0){
+        isPlayerTurn = true;
+    }
+    else {
+        isPlayerTurn = false;
+    }
+
+    function getPlayerSymbol() {
+        let playerSymbol = ["X","0"];
+        return playerSymbol[playerTurn++ %2];
+    }
+
+    let gridSpotFilled = function() {
+        this.removeEventListener("click",gridSpotFilled);
+        this.textContent = getPlayerSymbol();
+        
+        if(playerTurn == 8){
+            playerTurnBoard.textContent = "DRAW";
+            ticTacToeGridArray.forEach( (arr) => {
+                arr.forEach(Element => {
+                    Element.removeEventListener("click",gridSpotFilled);
+                    Element.classList.remove("gridBoxClickable");
+                });
+            });
+            return;
+        }
+    }
+
+    const buildGameBoard = function() {
+        ticTacToeGrid.style.display = "grid";
+        for(i = 0; i < 9; i++){
+            let gridBox = document.createElement("div");
+            if(isPlayerTurn){
+                gridBox.addEventListener("click", gridSpotFilled);
+                gridBox.classList.add("gridBoxClickable");
+            }
+            gridBox.classList.add("gridBox");
+            gridBox.setAttribute("data-row", Math.floor(i/3));
+            ticTacToeGrid.append(gridBox);
+        }
+          ticTacToeGridArray = [
+               Array.from(document.querySelectorAll(".gridBox[data-row='0']")),
+                Array.from(document.querySelectorAll(".gridBox[data-row='1']")),
+                Array.from(document.querySelectorAll(".gridBox[data-row='2']"))
+         ]
+            }
+
+    const computerPlay= function() {
+        
     }
 
     return {buildGameBoard};
-};
-// function GameBoard() {
-//     const buildGameBoard = function() {
-//         for(i = 0; i < 9; i++){
-//             let gridBox = document.createElement("div");
-//             gridBox.addEventListener("click", gridSpotFilled);
-//             gridBox.classList.add("gridBox");
-//             gridBox.classList.add("gridBoxClickable");
-//             gridBox.setAttribute("data-row", Math.floor(i/3));
-//             ticTacToeGrid.append(gridBox);
-//         }
-//           ticTacToeGridArray = [
-//                Array.from(document.querySelectorAll(".gridBox[data-row='0']")),
-//                 Array.from(document.querySelectorAll(".gridBox[data-row='1']")),
-//                 Array.from(document.querySelectorAll(".gridBox[data-row='2']"))
-//          ]
-//     }
 
-// }
+}
 function computer(e) {
     buttonOptions.disableButton(this);
     buttonOptions.enableButton(document.getElementById('2player'));
