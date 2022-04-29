@@ -7,11 +7,15 @@ function startGame() {
         let player2 = playerFactory(playerTurn + 1);
         let players = [player1,player2];
         let gameboard = GameBoard(players);
+        let computerPlayButton = document.querySelector('#bot');
+        buttonOptions.disbleButton(computerPlayButton);
+        computerPlayButton.classList.add("PlayOptionNotEnabled");
 
         gameboard.buildGameBoard();
     }
     else {
         let playerTurn = Math.floor(Math.random() * 2);
+        buttonOptions.disableButton(document.querySelector("#bot"));
         if(playerTurn == 0){
             let botTurn = 1;
         }
@@ -61,6 +65,13 @@ const buttonOptions = ( () => {
         if(this.textContent == "RESET"){
             buttonOptions.enableButton(document.querySelector("#start"));
             buttonOptions.disableButton(document.querySelector("#reset"))
+            if(document.querySelector("#2player").classList[0] == "buttonClicked"){
+
+
+            }
+            else {
+
+            }
             playerTurnBoard.textContent = "";
         }
     }
@@ -169,6 +180,8 @@ function computerGameBoard(playerTurn)
     let ticTacToeGrid = document.querySelector(".TicTacToeGrid");
     let ticTacToeGridArray;
     let isPlayerTurn;
+    const currentBoardState = [0,1,2,3,4,5,6,7,8];
+
     if(playerTurn == 0){
         isPlayerTurn = true;
     }
@@ -180,9 +193,48 @@ function computerGameBoard(playerTurn)
         let playerSymbol = ["X","0"];
         return playerSymbol[playerTurn++ %2];
     }
+    function checkBoardWinCondition() {
+        let firstRowWin = ticTacToeGridArray[0][0].textContent  === ticTacToeGridArray[0][1].textContent && ticTacToeGridArray[0][1].textContent === ticTacToeGridArray[0][2].textContent && ticTacToeGridArray[0][0].textContent != "";
+        let secondRowWin =  ticTacToeGridArray[1][0].textContent === ticTacToeGridArray[1][1].textContent && ticTacToeGridArray[1][1].textContent === ticTacToeGridArray[1][2].textContent && ticTacToeGridArray[1][0].textContent != "";
+        let thirdRowWin =  ticTacToeGridArray[2][0].textContent === ticTacToeGridArray[2][1].textContent && ticTacToeGridArray[2][1].textContent === ticTacToeGridArray[2][2].textContent && ticTacToeGridArray[2][0].textContent != "";
+        let firstColumnWin = ticTacToeGridArray[0][0].textContent === ticTacToeGridArray[1][0].textContent && ticTacToeGridArray[1][0].textContent  === ticTacToeGridArray[2][0].textContent && ticTacToeGridArray[0][0].textContent != "";
+        let secondColumnWin =  ticTacToeGridArray[0][1].textContent ===  ticTacToeGridArray[1][1].textContent && ticTacToeGridArray[1][1].textContent ===  ticTacToeGridArray[2][1].textContent &&  ticTacToeGridArray[0][1].textContent != "";
+        let thirdColumnWin = ticTacToeGridArray[0][2].textContent === ticTacToeGridArray[1][2].textContent && ticTacToeGridArray[1][2].textContent === ticTacToeGridArray[2][2].textContent && ticTacToeGridArray[0][2].textContent != "";
+        let topLeftToBottomRightDiagonal = ticTacToeGridArray[0][0].textContent === ticTacToeGridArray[1][1].textContent && ticTacToeGridArray[1][1].textContent === ticTacToeGridArray[2][2].textContent;
+        let topRightToBottomLeftDiagonal = ticTacToeGridArray[0][2].textContent ===  ticTacToeGridArray[1][1].textContent && ticTacToeGridArray[1][1].textContent === ticTacToeGridArray[2][0].textContent;
 
+        return(firstRowWin || secondRowWin || thirdRowWin || firstColumnWin || secondColumnWin || thirdColumnWin || topLeftToBottomRightDiagonal || topRightToBottomLeftDiagonal)
+
+    }
+ 
     let gridSpotFilled = function() {
-        this.removeEventListener("click",gridSpotFilled);
+        if(isPlayerTurn) {
+        ticTacToeGridArray.forEach(
+            arr => {
+                arr.forEach(
+                    gridSpot => {
+                        gridSpot.removeEventListener("click",gridSpotFilled);
+                        gridSpot.classList.remove('gridBoxClickable');
+                    }
+                );
+             } 
+            );
+            isPlayerTurn = !isPlayerTurn;
+        }
+
+        else {
+            ticTacToeGridArray.forEach(
+                arr => {
+                    arr.forEach(
+                        gridSpot => {
+                            gridSpot.addEventListener('click',gridSpotFilled);
+                            gridSpot.classList.add('gridBoxClickable');
+                        }
+                    );
+                }
+            );
+        }
+
         this.textContent = getPlayerSymbol();
         
         if(playerTurn == 8){
@@ -213,11 +265,13 @@ function computerGameBoard(playerTurn)
                Array.from(document.querySelectorAll(".gridBox[data-row='0']")),
                 Array.from(document.querySelectorAll(".gridBox[data-row='1']")),
                 Array.from(document.querySelectorAll(".gridBox[data-row='2']"))
-         ]
-            }
+         ];
+     }
 
     const computerPlay= function() {
-        
+
+            
+
     }
 
     return {buildGameBoard};
