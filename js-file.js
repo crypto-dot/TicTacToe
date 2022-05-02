@@ -1,21 +1,21 @@
 function startGame() {
     buttonOptions.disableButton(this);
     buttonOptions.enableButton(document.querySelector("#reset"));
-    if(document.getElementById('2player').classList[0] == "buttonClicked"){
+    if(document.getElementById('player2').classList[0] == "buttonClicked"){
         let playerTurn = 0;
         let player1 = playerFactory(playerTurn);
         let player2 = playerFactory(playerTurn + 1);
         let players = [player1,player2];
         let gameboard = GameBoard(players);
         let computerPlayButton = document.querySelector('#bot');
-        buttonOptions.disbleButton(computerPlayButton);
+        computerPlayButton.classList.add('resetEnable');
+        buttonOptions.disableButton(computerPlayButton);
         computerPlayButton.classList.add("PlayOptionNotEnabled");
-
         gameboard.buildGameBoard();
     }
     else {
         let playerTurn = Math.floor(Math.random() * 2);
-        buttonOptions.disableButton(document.querySelector("#bot"));
+        buttonOptions.disableButton(document.querySelector('#player2'));
         if(playerTurn == 0){
             let botTurn = 1;
         }
@@ -65,13 +65,7 @@ const buttonOptions = ( () => {
         if(this.textContent == "RESET"){
             buttonOptions.enableButton(document.querySelector("#start"));
             buttonOptions.disableButton(document.querySelector("#reset"))
-            if(document.querySelector("#2player").classList[0] == "buttonClicked"){
-
-
-            }
-            else {
-
-            }
+            buttonOptions.enableButton(document.querySelector(".resetEnable"));
             playerTurnBoard.textContent = "";
         }
     }
@@ -88,7 +82,7 @@ const buttonOptions = ( () => {
             case "reset":
                 button.addEventListener("click",clear);
                 break;
-            case "2player":
+            case "player2":
                 button.addEventListener("click",player2);
                 break;
             default:
@@ -140,7 +134,9 @@ function GameBoard(players)
                     Element.classList.remove("gridBoxClickable");
                 });
             });
+
             return;
+
         }
         if(playerTurn >= 5) {
             if(checkBoardWinCondition()){
@@ -151,7 +147,7 @@ function GameBoard(players)
                         Element.classList.remove("gridBoxClickable");
                     });
                 });
-                return;
+                               return;
             }
         }
         playerTurnBoard.textContent = `${players[playerTurn % 2].getName()}'s turn`;
@@ -257,16 +253,21 @@ function computerGameBoard(playerTurn)
                 gridBox.addEventListener("click", gridSpotFilled);
                 gridBox.classList.add("gridBoxClickable");
             }
+
             gridBox.classList.add("gridBox");
             gridBox.setAttribute("data-row", Math.floor(i/3));
             ticTacToeGrid.append(gridBox);
         }
           ticTacToeGridArray = [
-               Array.from(document.querySelectorAll(".gridBox[data-row='0']")),
-                Array.from(document.querySelectorAll(".gridBox[data-row='1']")),
-                Array.from(document.querySelectorAll(".gridBox[data-row='2']"))
+            Array.from(document.querySelectorAll(".gridBox[data-row='0']")),
+            Array.from(document.querySelectorAll(".gridBox[data-row='1']")),
+            Array.from(document.querySelectorAll(".gridBox[data-row='2']"))
          ];
-     }
+         if(!isPlayerTurn){
+             computerPlay();
+         }
+     
+        }
 
     const computerPlay= function() {
 
@@ -279,7 +280,7 @@ function computerGameBoard(playerTurn)
 }
 function computer(e) {
     buttonOptions.disableButton(this);
-    buttonOptions.enableButton(document.getElementById('2player'));
+    buttonOptions.enableButton(document.getElementById('player2'));
 
 }
 function player2(e) {
